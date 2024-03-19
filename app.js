@@ -1,20 +1,22 @@
-// app.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const fs = require("fs");
+const dotenv = require("dotenv");
+const multer = require('multer');
 
-import express from 'express';
-import bodyParser from 'body-parser';
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import * as fs from "fs";
-import dotenv from "dotenv";
-import multer from 'multer';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+app.set('views', 'views');
+
 app.use(bodyParser.json());
 
-// Set up multer for handling file uploads
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -29,10 +31,14 @@ function fileToGenerativePart(data, mimeType) {
     };
 }
 
+app.get('/', (req, res) => {
+    res.render('index');
+});
+
 app.post('/api2', (req, res) => {
     const { prompt } = req.body;
     res.json({ result: "hello "+prompt });
-  });
+});
 
 app.post('/api', upload.single('image'), async (req, res) => {
     try {

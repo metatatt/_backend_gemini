@@ -28,6 +28,6 @@ const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
 const image = [fileToGenerativePart("./messi.png", "image/jpeg")];
 
 const result = await model.generateContent([template, ...image]);
-const response = await result.response;
+const response = result.response;
 const text = response.text();
 console.log(text);
